@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -24,19 +25,46 @@ namespace Xamarin.Forms.ControlGallery.iOS
 	{
 		protected override void OnAttached()
 		{
+			InsertGradient();
+		}
+
+		CAGradientLayer layer; 
+		void InsertGradient()
+		{
+			System.Diagnostics.Debug.WriteLine("InsertGradient : " + Container.Bounds);
 			var page = Element as ContentPage;
 			var childLabel = page?.Content as Label;
-			if (childLabel != null && Container.Bounds.Width != 0)
+			if (childLabel != null && Container.Bounds.Width == 0)
+			{
+				return;
+			}
+
+			if(layer == null)
+			{
+
 				childLabel.Text = Issue6334.Success;
 
-			var sColor = page.BackgroundColor.ToCGColor();
-			var eColor = page.BackgroundColor.AddLuminosity(0.5).ToCGColor();
+				var sColor = page.BackgroundColor.ToCGColor();
+				var eColor = page.BackgroundColor.AddLuminosity(0.5).ToCGColor();
+				layer = new CAGradientLayer
+				{
+					Frame = Container.Bounds,
+					Colors = new CGColor[] { sColor, eColor }
+				};
+				Container.Layer.InsertSublayer(layer,0);
+			}
 
-			Container.Layer.InsertSublayer(new CAGradientLayer
+			layer.Frame = Container.Bounds;
+			
+		}
+
+		protected override void OnElementPropertyChanged(PropertyChangedEventArgs args)
+		{
+			base.OnElementPropertyChanged(args);
+			if (args.PropertyName == Page.WidthProperty.PropertyName)
 			{
-				Frame = Container.Bounds,
-				Colors = new CGColor[] { sColor, eColor }
-			}, 0);
+				InsertGradient();
+			}
 		}
 
 		protected override void OnDetached()
