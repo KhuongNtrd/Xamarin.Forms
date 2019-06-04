@@ -42,17 +42,16 @@ namespace Xamarin.Forms.ControlGallery.iOS
 				};
 				Container.Layer.InsertSublayer(layer, 0);
 			}
-
-			layer.Frame = Container.Bounds;
-
 		}
 
 		protected override void OnElementPropertyChanged(PropertyChangedEventArgs args)
 		{
 			base.OnElementPropertyChanged(args);
-			if (args.PropertyName == Page.WidthProperty.PropertyName)
+			if (args.PropertyName == Page.WidthProperty.PropertyName ||
+				args.PropertyName == Page.HeightProperty.PropertyName)
 			{
-				InsertGradient();
+				layer.Frame = Container.Bounds;
+				// or (Element as VisualElement).Bounds.ToRectangleF();
 			}
 		}
 
