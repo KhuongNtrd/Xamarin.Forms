@@ -17,61 +17,9 @@ using Xamarin.Forms.Platform.iOS;
 [assembly: Dependency(typeof(CacheService))]
 [assembly: ExportRenderer(typeof(DisposePage), typeof(DisposePageRenderer))]
 [assembly: ExportRenderer(typeof(DisposeLabel), typeof(DisposeLabelRenderer))]
-[assembly: ExportEffect(typeof(BorderEffect), Issue6334.EffectName)]
-[assembly: ExportEffect(typeof(GradientEffect), "GradientEffect")]
+[assembly: ExportEffect(typeof(BorderEffect), nameof(BorderEffect))]
 namespace Xamarin.Forms.ControlGallery.iOS
 {
-	public class GradientEffect : PlatformEffect
-	{
-		protected override void OnAttached()
-		{
-			InsertGradient();
-		}
-
-		CAGradientLayer layer; 
-		void InsertGradient()
-		{
-			System.Diagnostics.Debug.WriteLine("InsertGradient : " + Container.Bounds);
-			var page = Element as ContentPage;
-			var childLabel = page?.Content as Label;
-			if (childLabel != null && Container.Bounds.Width == 0)
-			{
-				return;
-			}
-
-			if(layer == null)
-			{
-
-				childLabel.Text = Issue6334.Success;
-
-				var sColor = page.BackgroundColor.ToCGColor();
-				var eColor = page.BackgroundColor.AddLuminosity(0.5).ToCGColor();
-				layer = new CAGradientLayer
-				{
-					Frame = Container.Bounds,
-					Colors = new CGColor[] { sColor, eColor }
-				};
-				Container.Layer.InsertSublayer(layer,0);
-			}
-
-			layer.Frame = Container.Bounds;
-			
-		}
-
-		protected override void OnElementPropertyChanged(PropertyChangedEventArgs args)
-		{
-			base.OnElementPropertyChanged(args);
-			if (args.PropertyName == Page.WidthProperty.PropertyName)
-			{
-				InsertGradient();
-			}
-		}
-
-		protected override void OnDetached()
-		{
-		}
-	}
-
 	public class BorderEffect : PlatformEffect
 	{
 		protected override void OnAttached()
