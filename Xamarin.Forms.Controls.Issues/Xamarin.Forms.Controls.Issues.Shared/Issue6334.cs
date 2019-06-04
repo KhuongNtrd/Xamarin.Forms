@@ -19,8 +19,7 @@ namespace Xamarin.Forms.Controls.Issues
 		public const string EffectName = "GradientEffect";
 		public const string Success = "Success";
 		public const string Fail = "Fail";
-		public const string AutomationId = "IssuePageLabel";
-
+		
 		protected override void Init()
 		{
 			BackgroundColor = Color.Blue;
@@ -30,7 +29,7 @@ namespace Xamarin.Forms.Controls.Issues
 
 			Content = new Label
 			{
-				AutomationId = AutomationId,
+				AutomationId = "IssuePageLabel",
 				Text = Fail
 			};
 		}
