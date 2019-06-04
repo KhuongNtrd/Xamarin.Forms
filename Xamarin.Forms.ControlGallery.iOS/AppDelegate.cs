@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using CoreAnimation;
 using CoreGraphics;
 using Foundation;
 using UIKit;
@@ -15,9 +16,34 @@ using Xamarin.Forms.Platform.iOS;
 [assembly: Dependency(typeof(CacheService))]
 [assembly: ExportRenderer(typeof(DisposePage), typeof(DisposePageRenderer))]
 [assembly: ExportRenderer(typeof(DisposeLabel), typeof(DisposeLabelRenderer))]
-[assembly: ExportEffect(typeof(BorderEffect), "BorderEffect")]
+[assembly: ExportEffect(typeof(BorderEffect), Issue6334.EffectName)]
+[assembly: ExportEffect(typeof(GradientEffect), "GradientEffect")]
 namespace Xamarin.Forms.ControlGallery.iOS
 {
+	public class GradientEffect : PlatformEffect
+	{
+		protected override void OnAttached()
+		{
+			var page = Element as ContentPage;
+			var childLabel = page?.Content as Label;
+			if (childLabel != null && Container.Bounds.Width != 0)
+				childLabel.Text = Issue6334.Success;
+
+			var sColor = page.BackgroundColor.ToCGColor();
+			var eColor = page.BackgroundColor.AddLuminosity(0.5).ToCGColor();
+
+			Container.Layer.InsertSublayer(new CAGradientLayer
+			{
+				Frame = Container.Bounds,
+				Colors = new CGColor[] { sColor, eColor }
+			}, 0);
+		}
+
+		protected override void OnDetached()
+		{
+		}
+	}
+
 	public class BorderEffect : PlatformEffect
 	{
 		protected override void OnAttached()
