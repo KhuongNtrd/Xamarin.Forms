@@ -19,6 +19,7 @@ namespace Xamarin.Forms.Controls.Issues
 		public const string EffectName = "GradientEffect";
 		public const string Success = "Success";
 		public const string Fail = "Fail";
+		public const string AutomationId = "IssuePageLabel";
 
 		protected override void Init()
 		{
@@ -29,18 +30,18 @@ namespace Xamarin.Forms.Controls.Issues
 
 			Content = new Label
 			{
-				AutomationId = "IssuePageLabel",
+				AutomationId = AutomationId,
 				Text = Fail
 			};
 		}
 
-#if UITEST
+#if UITEST && __IOS__
 		[Test]
 		public void Issue1Test() 
 		{
-			RunningApp.WaitForElement (q => q.Marked ("IssuePageLabel"));
+			RunningApp.WaitForElement (q => q.Marked (AutomationId));
 			RunningApp.WaitForElement(q => q.Marked(Success));
-			RunningApp.Screenshot ("I see the Label");
+			RunningApp.Screenshot ("I see the gradient");
 		}
 #endif
 	}
